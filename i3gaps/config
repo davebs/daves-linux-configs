@@ -14,20 +14,24 @@ set $accent #d6ab77
 set $trans  #bababa80
 set $barbg  #000000
 set $barfg  #fefefe
+set $hilight #fcba03
+set $brightpink #ff0066
+set $pink #ffcce0
+set $white #fefefe
 
 
 ##########################
 # SET FONTS
 ##########################
 # Font for window titles. Will also be used by the bar unless a different font
-#font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
-font pango:DejaVuSansMonoForPowerline Nerd Font 10
+# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+font pango:Hack Bold 10
+#font pango:DejaVuSansMonoForPowerline Nerd Font 10
 
 
 ##########################
 # SET KEY BINDINGS
 ##########################
-
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
@@ -40,7 +44,7 @@ bindsym $mod+Shift+q kill
 
 # start dmenu* (a program launcher)
 # * we use rofi, a hipster version of dmenu
-bindsym $mod+d exec --no-startup-id rofi -show run -fuzzy -opacity 90 -color-enabled
+bindsym $mod+d exec --no-startup-id rofi -show run -fuzzy -opacity 90 -color-enabled -display-run ":"
 
 # change focus
 bindsym $mod+h focus left
@@ -93,28 +97,28 @@ bindsym $mod+a focus parent
 # bindsym $mod+d focus child
 
 # switch to workspace
-bindsym $mod+1 workspace 1
-bindsym $mod+2 workspace 2
-bindsym $mod+3 workspace 3
-bindsym $mod+4 workspace 4
-bindsym $mod+5 workspace 5
-bindsym $mod+6 workspace 6
-bindsym $mod+7 workspace 7
-bindsym $mod+8 workspace 8
-bindsym $mod+9 workspace 9
-bindsym $mod+0 workspace 10
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
 
 # move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace 1
-bindsym $mod+Shift+2 move container to workspace 2
-bindsym $mod+Shift+3 move container to workspace 3
-bindsym $mod+Shift+4 move container to workspace 4
-bindsym $mod+Shift+5 move container to workspace 5
-bindsym $mod+Shift+6 move container to workspace 6
-bindsym $mod+Shift+7 move container to workspace 7
-bindsym $mod+Shift+8 move container to workspace 8
-bindsym $mod+Shift+9 move container to workspace 9
-bindsym $mod+Shift+0 move container to workspace 10
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -122,6 +126,9 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+# rename workspaces on the fly
+bindsym $mod+b exec i3-input -F 'rename workspace to "%s"' -P 'New name for this workspace: '
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -155,17 +162,17 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-    #status_command i3status -t
-    status_command /home/ds/.i3/custom_status.sh -t
+    #status_command /home/ds/.i3/custom_status.sh -t
+    status_command i3status -t
     position bottom
     colors {
         background $barbg
         statusline $barfg
 
         #                  BORDER    BG       TEXT
-        inactive_workspace $barbg    $barbg   $trans
-        active_workspace   $trans    $trans   $back
-        focused_workspace  $trans    $trans   $back
+        inactive_workspace $barbg    $barbg   $white
+        active_workspace   $brightpink    $pink   $brightpink
+        focused_workspace  $brightpink    $pink   $brightpink
         urgent_workspace   $urg      $urg     $trans
     }
     tray_padding 0
@@ -179,14 +186,14 @@ new_window normal 1
 hide_edge_borders none
 
 gaps inner 20
-gaps outer 1
+gaps outer 10
 smart_gaps on
 smart_borders on
-for_window [class="^.*"] border pixel 0
-#for_window [instance=__focused__] border pixel 5
+for_window [class="^.*"] border pixel 5
+for_window [instance=__focused__] border pixel 5
 
 # class                 border  backgr. text    indicator child_border
-client.focused          $trans  $trans  $back   $trans
+client.focused          $hilight  $hilight  $back   $trans
 client.focused_inactive $back   $back   $trans  $trans
 client.unfocused        $back   $back   $trans  $back
 client.urgent           $urg    $urg    $back   $back
@@ -208,16 +215,18 @@ for_window [class="(?i)VirtualBox" title="(?i)Manager"] floating enable
 for_window [class="(?i)VirtualBox"] floating enable
 for_window [class="(?i)blueman"] floating enable
 for_window [title="(?i)Volume"] floating enable
+for_window [title="(?i)Task Manager"] floating enable
 
 ##########################
 # RUN AT STARTUP OF I3
 ##########################
 
 # activate compton, making sure to kill it dead first
-exec_always --no-startup-id "killall compton; sh-c 'sleep 1'; /usr/bin/compton --config /home/ds/.i3/compton.conf"
+# exec_always --no-startup-id "killall compton; sh-c 'sleep 1'; /usr/bin/compton --config /home/ds/.config/compton.conf"
 
 # set desktop bg
-exec_always feh --bg-scale /home/ds/Pictures/Wallpapers/solid_abstract.jpg;
+#exec_always feh --bg-fill /home/ds/Pictures/left2.jpg --bg-fill /home/ds/Pictures/right2.jpg;
+exec_always feh --bg-fill /home/ds/Pictures/iceberg.png
 
 # PulseAudio Volume Tray Icon
 exec /usr/bin/pasystray;
