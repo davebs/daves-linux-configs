@@ -10,6 +10,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'tpope/vim-fugitive'
+Plugin 'sickill/vim-monokai'
 " Plugin 'majutsushi/tagbar'
 " Plugin 'ternjs/tern_for_vim'
 " Plugin 'camspiers/animate.vim'
@@ -53,7 +54,7 @@ hi CursorLine  cterm=NONE ctermbg=black ctermfg=white guibg=darkred guifg=white
 nnoremap <NUL> :resize 60<CR>
 nnoremap <c-n> <esc>:tabn<CR>
 nnoremap <c-p> <esc>:tabp<CR>
-colorscheme molokai
+colorscheme monokai
 
 let mapleader=","
 nnoremap <leader>rc :sp $MYVIMRC<cr>
